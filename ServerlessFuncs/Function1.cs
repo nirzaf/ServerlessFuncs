@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Build.Framework;
 
 namespace ServerlessFuncs
 {
@@ -17,7 +16,7 @@ namespace ServerlessFuncs
 
         [FunctionName("CreateTodo")]
         public static async Task<IActionResult> CreateTodo(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "todo")] HttpRequest req, ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "todo")] HttpRequest req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var input = JsonConvert.DeserializeObject<TodoCreateModel>(requestBody);
@@ -29,15 +28,14 @@ namespace ServerlessFuncs
 
         [FunctionName("GetTodos")]
         public static IActionResult GetTodos(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "todo")]HttpRequest req, ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "todo")]HttpRequest req)
         {
             return new OkObjectResult(items);
         }
 
         [FunctionName("GetTodoById")]
         public static IActionResult GetTodoById(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "todo/{id}")]HttpRequest req, 
-            ILogger log, string id)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "todo/{id}")]HttpRequest req, string id)
         {
             var todo = items.FirstOrDefault(t => t.Id == id);
             if (todo == null)
@@ -49,8 +47,7 @@ namespace ServerlessFuncs
 
         [FunctionName("UpdateTodo")]
         public static async Task<IActionResult> UpdateTodo(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "todo/{id}")]HttpRequest req,
-            ILogger log, string id)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "todo/{id}")]HttpRequest req, string id)
         {
             var todo = items.FirstOrDefault(t => t.Id == id);
             if (todo == null)
@@ -72,8 +69,7 @@ namespace ServerlessFuncs
 
         [FunctionName("DeleteTodo")]
         public static IActionResult DeleteTodo(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "todo/{id}")]HttpRequest req,
-            ILogger log, string id)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "todo/{id}")]HttpRequest req, string id)
         {
             var todo = items.FirstOrDefault(t => t.Id == id);
             if (todo == null)
